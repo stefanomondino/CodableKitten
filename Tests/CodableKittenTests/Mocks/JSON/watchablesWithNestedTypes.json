@@ -1,0 +1,18 @@
+[
+    {
+        "name": "The big bang theory",
+        "type": "tvShow",
+        "isEnded": true
+    },
+    {
+        "name": "Inside Out 2",
+        "type": "movie",
+        "year": 2024
+    },
+    {
+        "name": "American Idiot",
+        "type": "other",
+        "subType": "musicVideo",
+        "artist": "Green Day"
+    }
+]

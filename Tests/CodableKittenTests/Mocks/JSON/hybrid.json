@@ -1,0 +1,17 @@
+{
+    "people":
+    [
+        {
+            "actor": {
+                "name": "John Doe",
+                "age": 50
+            }
+        },
+        {
+            "crew": {
+                "name": "Seth Mac Farlane",
+                "role": "director"
+            }
+        }
+    ]
+}

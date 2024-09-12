@@ -1,0 +1,14 @@
+[
+  {
+    "type": "car",
+    "brand": "TheBrand™"
+  },
+  {
+    "type": "boat",
+    "engineCount": 2
+  },
+  {
+    "type": "bike",
+    "isElectric": true
+  }
+]

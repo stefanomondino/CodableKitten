@@ -1,0 +1,17 @@
+//
+//  File.swift
+//  
+//
+//  Created by Stefano Mondino on 16/09/24.
+//
+
+import Foundation
+
+public protocol Polymorphic: Decodable {
+    associatedtype Extractor: TypeExtractor
+    static var keyType: Extractor { get }
+}
+
+public extension Polymorphic {
+    var key: Extractor { Self.keyType }
+}

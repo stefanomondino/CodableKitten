@@ -1,0 +1,17 @@
+{
+    "name": "test",
+    "vehicle": {
+        "type": "car",
+        "brand": "TheBrand™"
+    },
+    "otherVehicles": [
+        {
+          "type": "boat",
+          "engineCount": 2
+        },
+        {
+          "type": "bike",
+          "isElectric": true
+        }
+    ]
+}

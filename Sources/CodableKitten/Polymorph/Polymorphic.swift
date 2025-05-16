@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol Polymorphic: Decodable {
+public protocol Polymorphic: Decodable, Sendable {
     associatedtype Extractor: TypeExtractor
     static var keyType: Extractor { get }
 }

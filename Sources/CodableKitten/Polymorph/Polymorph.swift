@@ -1,6 +1,6 @@
 
 @propertyWrapper
-public struct Polymorph<Extractor: TypeExtractor>: Decodable {
+public struct Polymorph<Extractor: TypeExtractor>: Decodable, Sendable {
     private var value: Extractor.ObjectType?
     public var wrappedValue: Extractor.ObjectType {
         get {
@@ -26,7 +26,7 @@ public struct Polymorph<Extractor: TypeExtractor>: Decodable {
     }
 }
 
-extension Polymorph: Encodable where Extractor.ObjectType: Encodable {
+extension Polymorph: Encodable {
     public func encode(to encoder: any Encoder) throws {
         try Extractor.encode(value: wrappedValue, into: encoder)
 //            var container = encoder.singleValueContainer()
@@ -57,7 +57,7 @@ public struct OptionalPolymorph<Extractor: TypeExtractor>: Decodable {
     }
 }
 
-extension OptionalPolymorph: Encodable where Extractor.ObjectType: Encodable {
+extension OptionalPolymorph: Encodable {
     public func encode(to encoder: any Encoder) throws {
         if let wrappedValue {
             try Extractor.encode(value: wrappedValue, into: encoder)

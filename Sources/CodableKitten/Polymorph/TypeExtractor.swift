@@ -9,8 +9,8 @@ import Foundation
 /**
         An object capable of extracting a key type from a `Decodable` object
  */
-public protocol TypeExtractor: Decodable, Equatable {
-    associatedtype ObjectType
+public protocol TypeExtractor: Decodable, Equatable, Sendable {
+    associatedtype ObjectType: Sendable
 //    typealias ObjectType = any Polymorphic
     func itemType(from availableTypes: [any Polymorphic.Type]) -> (any Polymorphic.Type)?
     func extract(from container: SingleValueDecodingContainer,
@@ -91,7 +91,7 @@ public extension TypeExtractor {
         return objects
     }
     
-    static func encode(value: ObjectType, into encoder: any Encoder) throws where ObjectType: Encodable {
+    static func encode(value: ObjectType, into encoder: any Encoder) throws {
         if let value = value as? Encodable {   
             var container = encoder.singleValueContainer()
             try container.encode(AnyEncodable(value))

@@ -56,6 +56,7 @@ final class PolymorphicTests: XCTestCase {
         XCTAssertEqual(array.count, 3)
     }
     func test_polymorphic_objects_with_nested_types_gets_encoded() throws {
+        
         let polymorph = try Mock.watchablesWithNestedTypes
             .object(of: PolymorphArray<WatchableType>.self, decoder: decoder)
         let data = try JSONEncoder().encode(polymorph)

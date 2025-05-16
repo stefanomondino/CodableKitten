@@ -8,7 +8,7 @@
 import Foundation
 
 struct Mock: ExpressibleByStringInterpolation {
-    
+    static var events: Self { "events" }
     static var vehicles: Self { "vehicles" }
     static var vehicle: Self { "vehicle" }
     static var animal: Self { "animal" }

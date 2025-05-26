@@ -1,8 +1,7 @@
-
 @propertyWrapper
-public struct Polymorph<Extractor: TypeExtractor>: Decodable, Sendable {
-    private var value: Extractor.ObjectType?
-    public var wrappedValue: Extractor.ObjectType {
+public struct Polymorph<Extractor: TypeExtractor, Value: Sendable>: Codable, Sendable {
+    private var value: Value?
+    public var wrappedValue: Value {
         get {
             return value.unsafelyUnwrapped
         }
@@ -10,126 +9,53 @@ public struct Polymorph<Extractor: TypeExtractor>: Decodable, Sendable {
             value = newValue
         }
     }
-    public init(_ type: Extractor.Type = Extractor.self) {}
-    public init(_ value: Extractor.ObjectType) {
+    
+    public init(_ type: Extractor.Type = Extractor.self, _ value: Value.Type = Value.self) {}
+    public init(_ value: Value) {
         self.value = value
     }
-    public init(from decoder: any Decoder) throws {
-        guard let value: Extractor.ObjectType = try Extractor.extract(from: decoder) else {
-            throw Error.missingMapping
-        }
-        self.value = value
-    }
- 
-    public func value<Value: Polymorphic>(of _: Value.Type = Value.self) -> Value? where Value.Extractor == Extractor {
-        wrappedValue as? Value
-    }
-}
 
-extension Polymorph: Encodable {
-    public func encode(to encoder: any Encoder) throws {
-        try Extractor.encode(value: wrappedValue, into: encoder)
-//            var container = encoder.singleValueContainer()
-//            try container.encode(wrappedValue)
-    }
-}
-
-@propertyWrapper
-public struct OptionalPolymorph<Extractor: TypeExtractor>: Decodable {
-    private var value: Extractor.ObjectType?
-    public var wrappedValue: Extractor.ObjectType? {
-        get {
-            return value
-        }
-        set {
-            value = newValue
-        }
-    }
-    public init(_ type: Extractor.Type = Extractor.self) {}
-    public init(_ value: Extractor.ObjectType) {
-        self.value = value
-    }
-    public init(from decoder: any Decoder) throws {
-        self.value = try Extractor.extract(from: decoder)
-    }
-    public func value<Value: Polymorphic>(of _: Value.Type = Value.self) -> Value? where Value.Extractor == Extractor {
-        wrappedValue as? Value
-    }
-}
-
-extension OptionalPolymorph: Encodable {
-    public func encode(to encoder: any Encoder) throws {
-        if let wrappedValue {
-            try Extractor.encode(value: wrappedValue, into: encoder)
+    public init(from decoder: any Decoder) throws  {
+        if Extractor.ObjectType.self == Value.self {
+            guard let value: Extractor.ObjectType = try Extractor.extract(from: decoder) else {
+                throw Error.missingMapping
+            }
+            self.value = value as? Value
+        } else if Value.self == Optional<Extractor.ObjectType>.self {
+            let value: Optional<Extractor.ObjectType> = try Extractor.extract(from: decoder)
+            self.value = value as? Value
+        } else if Value.self == [Extractor.ObjectType].self {
+            let value: [Extractor.ObjectType]? = try Extractor.extract(from: decoder)
+            self.value = value as? Value
+        } else if Value.self == Optional<[Extractor.ObjectType]>.self {
+            let value: [Extractor.ObjectType]? = try Extractor.extract(from: decoder)
+            self.value = value as? Value
         } else {
-            var container = encoder.singleValueContainer()
-            try container.encodeNil()
+            throw Error.misconfiguredMapping
         }
-    }
-}
-
-
-@propertyWrapper
-public struct PolymorphArray<Extractor: TypeExtractor>: Decodable {
-    private var value: [Extractor.ObjectType]
-    public var wrappedValue: [Extractor.ObjectType] {
-        get {
-            return value
-        }
-        set {
-            value = newValue
-        }
-    }
-    public init(_ type: Extractor.Type = Extractor.self) {
-        value = []
     }
     
-    public init(_ value: [Extractor.ObjectType]) {
-        self.value = value
-    }
-    
-    public init(from decoder: any Decoder) throws {
-        self.value = try Extractor.extract(from: decoder) ?? []
-    }
-}
-
-extension PolymorphArray: Encodable {
     public func encode(to encoder: any Encoder) throws {
-        try Extractor.encode(values: wrappedValue, into: encoder)
-    }
-}
-
-@propertyWrapper
-public struct OptionalPolymorphArray<Extractor: TypeExtractor>: Decodable {
-    private var value: [Extractor.ObjectType]?
-    public var wrappedValue: [Extractor.ObjectType]? {
-        get {
-            return value
-        }
-        set {
-            value = newValue
-        }
-    }
-    public init(_ type: Extractor.Type = Extractor.self) {
-    }
-    
-    public init(_ value: [Extractor.ObjectType]?) {
-        self.value = value
-    }
-    
-    public init(from decoder: any Decoder) throws {
-        self.value = try Extractor.extract(from: decoder)
-    }
-}
-
-extension OptionalPolymorphArray: Encodable where Extractor.ObjectType: Encodable {
-        public func encode(to encoder: any Encoder) throws {
-           
-            if let values = wrappedValue {
-                try Extractor.encode(values: values, into: encoder)
+        if let value = wrappedValue as? Extractor.ObjectType {
+            try Extractor.encode(value: value, into: encoder)
+        } else if let value = wrappedValue as? Optional<Extractor.ObjectType> {
+            if let value {
+                try Extractor.encode(value: value, into: encoder)
             } else {
-                var container = encoder.unkeyedContainer()
+                var container = encoder.singleValueContainer()
                 try container.encodeNil()
             }
+        } else if let values = wrappedValue as? [Extractor.ObjectType] {
+            try Extractor.encode(values: values, into: encoder)
+        } else if let values = wrappedValue as? [Extractor.ObjectType]? {
+            if let values {
+                try Extractor.encode(values: values, into: encoder)
+            } else {
+                var container = encoder.singleValueContainer()
+                try container.encodeNil()
+            }
+        } else {
+            throw Error.misconfiguredMapping
+        }
     }
 }

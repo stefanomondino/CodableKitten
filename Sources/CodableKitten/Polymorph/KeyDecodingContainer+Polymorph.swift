@@ -8,18 +8,11 @@
 import Foundation
 
 public extension KeyedDecodingContainer {
-    func decode<T>(_ type: OptionalPolymorph<T>.Type, forKey key: K) throws -> OptionalPolymorph<T> {
+
+    func decode<Extractor, Value>(_ type: Polymorph<Extractor, Value>.Type, forKey key: K) throws -> Polymorph<Extractor, Value> {
         if let value = try self.decodeIfPresent(type, forKey: key) {
             return value
         }
-
-        return OptionalPolymorph()
-    }
-    func decode<T>(_ type: OptionalPolymorphArray<T>.Type, forKey key: K) throws -> OptionalPolymorphArray<T> {
-        if let value = try self.decodeIfPresent(type, forKey: key) {
-            return value
-        }
-
-        return OptionalPolymorphArray()
+        return Polymorph()
     }
 }

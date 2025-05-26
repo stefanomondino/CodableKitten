@@ -9,9 +9,9 @@ import Foundation
 
 public protocol Polymorphic: Decodable, Sendable {
     associatedtype Extractor: TypeExtractor
-    static var keyType: Extractor { get }
+    static var typeExtractor: Extractor { get }
 }
 
-public extension Polymorphic {
-    var key: Extractor { Self.keyType }
-}
+//public extension Polymorphic {
+//    var key: Extractor { Self.extractor }
+//}

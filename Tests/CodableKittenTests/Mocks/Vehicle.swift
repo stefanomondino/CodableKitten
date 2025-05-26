@@ -14,23 +14,31 @@ struct VehicleType: StringTypeExtractor {
         case value = "type"
     }
     var value: String
+    init(_ value: String) {
+        self.value = value
+    }
 }
 
-protocol Vehicle: Polymorphic where Extractor == VehicleType {}
+protocol Vehicle: Polymorphic where Extractor == VehicleType {
+    var name: String { get }
+}
 
 struct Car: Vehicle {
-    static var keyType: VehicleType { .car }
+    static var typeExtractor: VehicleType { .car }
     let brand: String
+    let name: String
 }
 
 struct Boat: Vehicle {
-    static var keyType: VehicleType { .boat }
+    static var typeExtractor: VehicleType { .boat }
     let engineCount: Int
+    let name: String
 }
 
 struct Bike: Vehicle {
-    static var keyType: VehicleType { .bike }
+    static var typeExtractor: VehicleType { .bike }
     let isElectric: Bool
+    let name: String
 }
 
 extension VehicleType {
@@ -40,8 +48,8 @@ extension VehicleType {
 }
 
 struct SingleResponse: Decodable {
-    @OptionalPolymorph<VehicleType> var nilValue: (any Vehicle)?
-    @OptionalPolymorphArray<VehicleType> var nilArrayValue: [any Vehicle]?
-    @Polymorph<VehicleType> var vehicle: any Vehicle
-    @PolymorphArray<VehicleType> var otherVehicles: [any Vehicle]
+    @Polymorph<VehicleType, Vehicle?> var nilValue
+    @Polymorph<VehicleType, [Vehicle]?> var nilArrayValue
+    @Polymorph<VehicleType, Vehicle> var vehicle
+    @Polymorph<VehicleType, [Vehicle]> var otherVehicles
 }

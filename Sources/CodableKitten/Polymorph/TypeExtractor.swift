@@ -10,8 +10,9 @@ import Foundation
         An object capable of extracting a key type from a `Decodable` object
  */
 public protocol TypeExtractor: Decodable, Equatable, Sendable {
+    // having ObjectType: Polymorphic will compile the library but doesn't work when used in actual code with protocol
+//    associatedtype ObjectType: Polymorphic
     associatedtype ObjectType: Sendable
-//    typealias ObjectType = any Polymorphic
     func itemType(from availableTypes: [any Polymorphic.Type]) -> (any Polymorphic.Type)?
     func extract(from container: SingleValueDecodingContainer,
                  availableTypes: [any Polymorphic.Type]) throws -> ObjectType?
@@ -25,16 +26,36 @@ public protocol StringTypeExtractor: TypeExtractor,
                                     ExpressibleByStringInterpolation,
                                     CustomStringConvertible {
     var value: String { get }
-    init(value: String)
+    init(_ value: String)
+}
+
+extension Optional: Polymorphic where Wrapped: Polymorphic {
+    public static var typeExtractor: Wrapped.Extractor {
+        Wrapped.typeExtractor
+    }
+}
+
+extension Array: Polymorphic where Element: Polymorphic {
+    public static var typeExtractor: Element.Extractor {
+        Element.typeExtractor
+    }
+}
+
+extension Optional: TypeExtractor where Wrapped: TypeExtractor {
+    public typealias ObjectType = Wrapped.ObjectType?
+}
+
+extension Array: TypeExtractor where Element: TypeExtractor {
+    public typealias ObjectType = [Element.ObjectType]
 }
 
 extension StringTypeExtractor {
     public var description: String { value }
     public init(stringInterpolation value: String) {
-        self.init(value: value)
+        self.init(value)
     }
     public init(stringLiteral value: String) {
-        self.init(value: value)
+        self.init(value)
     }
 }
 
@@ -44,7 +65,7 @@ public extension TypeExtractor {
     }
     
     func itemType(from availableTypes: [any Polymorphic.Type]) -> (any Polymorphic.Type)? {
-        availableTypes.first(where: { $0.keyType as? Self == self })
+        availableTypes.first(where: { $0.typeExtractor as? Self == self })
     }
     
     func extract(from container: SingleValueDecodingContainer, availableTypes: [any Polymorphic.Type]) throws -> ObjectType? {
@@ -132,7 +153,7 @@ public extension Decoder {
 public extension JSONDecoder {
     func set<Extractor: TypeExtractor>(types: [any Polymorphic.Type], for extractor: Extractor.Type = Extractor.self) {
         userInfo[Extractor.codingReference] = types
-    }
+    }    
 }
 
 public extension PropertyListDecoder {

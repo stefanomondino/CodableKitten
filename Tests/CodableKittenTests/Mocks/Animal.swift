@@ -10,12 +10,16 @@ import CodableKitten
 
 protocol Animal: Polymorphic where Extractor == AnimalType {}
 
-struct AnimalType: StringTypeExtractor {
+struct AnimalType: StringTypeExtractor, Encodable {
     enum CodingKeys: String, CodingKey {
         case value = "type"
     }
+    
     typealias ObjectType = Animal
     let value: String
+    init(_ value: String) {
+        self.value = value
+    }
 }
 
 extension AnimalType {
@@ -24,13 +28,13 @@ extension AnimalType {
 }
 
 struct Dog: Animal {
-    static var keyType: AnimalType { .dog }
+    static var typeExtractor: AnimalType { .dog }
     let name: String
     let goodBoy: Bool
 }
 
 struct Cat: Animal {
-    static var keyType: AnimalType { .cat }
+    static var typeExtractor: AnimalType { .cat }
     let name: String
     let breed: String
 }

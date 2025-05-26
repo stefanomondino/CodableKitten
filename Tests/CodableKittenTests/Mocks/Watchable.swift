@@ -10,6 +10,7 @@ import CodableKitten
 
 struct WatchableType: TypeExtractor, Encodable {
     typealias ObjectType = Watchable
+    
     enum CodingKeys: String, CodingKey {
         case type = "type"
         case subType
@@ -38,7 +39,7 @@ protocol Watchable: Encodable, Polymorphic where Extractor == WatchableType {
 
 struct TVShow: Watchable {
     
-    static var keyType:WatchableType { .tvShow }
+    static var typeExtractor:WatchableType { .tvShow }
     let name: String
     let isEnded: Bool
     var type: String
@@ -46,7 +47,7 @@ struct TVShow: Watchable {
 }
 
 struct Movie: Watchable {
-    static var keyType: WatchableType { .movie }
+    static var typeExtractor: WatchableType { .movie }
     let name: String
     let year: Int
     var type: String
@@ -54,7 +55,7 @@ struct Movie: Watchable {
 }
 
 struct MusicVideo: Watchable {
-    static var keyType: WatchableType { .musicVideo }
+    static var typeExtractor: WatchableType { .musicVideo }
     let name: String
     let artist: String
     var type: String

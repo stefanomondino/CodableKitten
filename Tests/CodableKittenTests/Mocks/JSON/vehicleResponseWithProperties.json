@@ -2,16 +2,19 @@
     "name": "test",
     "vehicle": {
         "type": "car",
-        "brand": "TheBrand™"
+        "brand": "TheBrand™",
+        "name": "The Name®"
     },
     "otherVehicles": [
         {
           "type": "boat",
-          "engineCount": 2
+          "engineCount": 2,
+          "name": "Floater 3000"
         },
         {
           "type": "bike",
-          "isElectric": true
+          "isElectric": true,
+          "name": "Bye Cycle"
         }
     ]
 }

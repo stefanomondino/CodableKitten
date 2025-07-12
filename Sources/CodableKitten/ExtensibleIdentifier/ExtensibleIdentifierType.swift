@@ -82,8 +82,27 @@ extension ExtensibleIdentifierType where Value == Float {
         self.init(value)
     }
 }
-
-@propertyWrapper public struct ExtensibleIdentifierCase<Identifier: ExtensibleIdentifierType> {
+/// Provides a syntax close to enum case to ExtensibleIdentifierType objects
+///
+///  - Warning:
+///         Swift 6.0 does not support static property wrappers and strict concurrency at the same time.
+///         This feature is mostly here for future reference, hoping that static property wrappers will somehow find their place in the strict concurrency world
+///
+///  Example:
+///  ```swift
+///  typealias MyIdentifier = ExtensibleIdentifier<String, MyObject>
+///  extension MyIdentifier {
+///    @Case("my_value") static var myValue
+///  }
+///
+///   switch myIdentifier {
+///     case .myValue: // do something
+///     default: break
+///   }
+///  ```
+///  Will create a new ExtensibleIdentifier wrapping a String and constrained to MyObject that matches `"my_value"` external value to a variable named `myValue
+///
+@propertyWrapper public struct ExtensibleIdentifierCase<Identifier: ExtensibleIdentifierType>: Sendable {
     let key: Identifier.Value
     /// Creates a new case with the given key.
     /// - Parameter key: The value for the case.
@@ -95,3 +114,4 @@ extension ExtensibleIdentifierType where Value == Float {
         return .init(key)
     }
 }
+

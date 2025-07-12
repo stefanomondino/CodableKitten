@@ -6,13 +6,14 @@
 //
 import CodableKitten
 
-struct Event: Codable {
+struct Event: Codable, Sendable {
     typealias Category = ExtensibleIdentifier<String, Self>
     let title: String
     let category: Category
 }
 
 extension Event.Category {
-    @Case("talk") static var talk
-    @Case("workshop") static var workshop
+    static var talk: Self { "talk" }
+    static var workshop: Self { "workshop" }
 }
+

@@ -1,5 +1,5 @@
 ![](CodableKitten.png)
-
+[![Swift Package Tests](https://github.com/stefanomondino/CodableKitten/actions/workflows/test.yml/badge.svg)](https://github.com/stefanomondino/CodableKitten/actions/workflows/test.yml)
 CodableKitten is a collection of tools to deal with Swift Codable objects, especially in advanced scenarios involving modularization.
 
 ## Key Features

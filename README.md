@@ -29,7 +29,7 @@ Add CodableKitten as a dependency in your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/stefanomondino/CodableKitten", from: "1.0.0")
+    .package(url: "https://github.com/stefanomondino/CodableKitten", from: "0.1.0")
 ]
 ```
 Then add `CodableKitten` to your target dependencies:

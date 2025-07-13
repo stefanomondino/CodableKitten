@@ -1,0 +1,11 @@
+[{
+    "type": "dog",
+    "name": "Bingo",
+    "goodBoy": true
+},
+  {
+    "type": "cat",
+    "name": "Whiskers",
+    "isFluffy": true
+  }
+]

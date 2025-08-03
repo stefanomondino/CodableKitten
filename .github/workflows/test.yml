@@ -14,6 +14,11 @@ jobs:
       - name: Set up Swift
         uses: swift-actions/setup-swift@v2
         with:
-          swift-version: '6.0'
+          swift-version: '5.9'
+      - name: Debug Setup Swift
+        run: |
+          echo "Swift setup failed. Capturing logs..."
+          ls -la /usr/bin
+          cat /etc/os-release
       - name: Build and test
         run: swift test --enable-test-discovery

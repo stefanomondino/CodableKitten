@@ -11,7 +11,7 @@ import Testing
 
 @Suite("DateValue Tests")
 struct DateValueTests {
-    var iso8601Mock: DateRepresentation<ISO8601Format> {
+    var iso8601Mock: DateRepresentation<ISO8601SafeFormat> {
         .init(
             string: "2023-10-01T12:34:56Z",
             date: DateComponents(
@@ -27,7 +27,7 @@ struct DateValueTests {
             ).date.unsafelyUnwrapped)
     }
 
-    var iso8601WithMillisecondsMock: DateRepresentation<ISO8601FormatWithMilliseconds> {
+    var iso8601WithMillisecondsMock: DateRepresentation<ISO8601SafeFormat> {
         .init(
             string: "2023-10-01T12:34:56.001Z",
             date: DateComponents(

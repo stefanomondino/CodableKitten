@@ -10,26 +10,34 @@ import SwiftUI
 
 extension Github.Push: Renderable {
     func buildView() -> any View {
-        PushView(push: self)
+        PushView(value: self)
     }
 }
 
 struct PushView: View {
-    let push: Github.Push
+    let value: Github.Push
     
     var body: some View {
-        HStack(alignment: .center) {
-            if let avatar = push.actor.avatarURL {
-                AsyncImage(url: avatar) { image in
-                    if let value = image.image {
-                        value.resizable()
-                        .aspectRatio(1, contentMode: .fit)
-                        .frame(height: 40)
-                        .clipShape(Circle())
-                    }
-                }
-            }
-            Text(push.actor.login)
+        HStack {
+            ActorView(event: value)
+            Spacer()
+            Image(systemName: "arrow.up")
+                
         }
+        .card()
+    }
+}
+
+extension View {
+    func card(background: Color = .white) -> some View {
+        self
+            .padding()
+            .background(background)
+            .clipShape(.capsule)
+            .overlay {
+                Capsule()
+                    .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
+            }
+            .contentShape(.capsule)
     }
 }

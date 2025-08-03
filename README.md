@@ -8,6 +8,7 @@ CodableKitten is a collection of tools to deal with Swift Codable objects, espec
 
 - **Polymorph**: a property wrapper powered way to decode objects into a protocol type when the concrete type is not known in advance.
 - **ExtensibleIdentifier**: a safe, non-failing alternative to classic enums that can be extended outside the original declaration (and declaring module)
+- **DateValue**: a safe property wrapper to directly convert remote date values into `Date` objects, handling various date formats and time zones. Use `ISO8601DateFormat` for ISO 8601 dates or write your own custom formatter.
 
 
 ## Installation

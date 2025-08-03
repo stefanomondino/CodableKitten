@@ -18,18 +18,11 @@ struct WatchView: View {
     let value: Github.Watch
     
     var body: some View {
-        HStack(alignment: .center) {
-            if let avatar = value.actor.avatarURL {
-                AsyncImage(url: avatar) { image in
-                    if let value = image.image {
-                        value.resizable()
-                        .aspectRatio(1, contentMode: .fit)
-                        .frame(height: 40)
-                        .clipShape(Circle())
-                    }
-                }
-            }
-            Text(value.actor.login)
+        HStack {
+            ActorView(event: value)
+            Spacer()
+            Image(systemName: "eye")
         }
+        .card()
     }
 }

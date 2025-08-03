@@ -10,10 +10,10 @@ import Foundation
 
 struct Github: Sendable {
     struct Actor: Codable, Sendable {
-        enum CodingKeys: String, CodingKey {
+        nonisolated enum CodingKeys: String, CodingKey {
             case id
             case login
-            case avatarURL = "avatar_url"
+            case avatarURL = "avatarUrl"
         }
         let id: Int64
         let login: String
@@ -25,10 +25,11 @@ struct Github: Sendable {
 protocol GithubEvent: Polymorphic, Identifiable where Extractor == Github.EventType {
     var actor: Github.Actor { get }
     var id: String { get }
+    var createdAt: Date { get }
 }
 
 extension Github {
-    struct EventType: TypeExtractor {
+    nonisolated struct EventType: TypeExtractor {
         typealias ID = ExtensibleIdentifier<String, Self>
         typealias ObjectType = GithubEvent
         let type: ID

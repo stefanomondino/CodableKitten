@@ -16,7 +16,10 @@ actor GithubService {
         self.session = session
         self.decoder.set(types: [Github.Push.self, Github.Release.self, Github.Watch.self],
                          for: Github.EventType.self)
+        self.decoder.keyDecodingStrategy = .convertFromSnakeCase
+        self.decoder.dateDecodingStrategy = .iso8601
     }
+    /// Documentation for event types is available at  https://docs.github.com/en/rest/using-the-rest-api/github-event-types
     func fetchEvents(for username: String, repo: String) async throws -> [any GithubEvent] {
         let request = URLRequest(url: baseURL.appendingPathComponent("repos/\(username)/\(repo)/events"))
         let (data, response) = try await session.data(for: request)

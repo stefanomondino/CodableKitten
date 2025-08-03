@@ -8,33 +8,36 @@
 import Foundation
 import CodableKitten
 
-protocol Animal: Polymorphic where Extractor == AnimalType {}
+protocol Animal: Polymorphic, Encodable where Extractor == AnimalType {}
 
-struct AnimalType: StringTypeExtractor, Encodable {
+struct AnimalType: TypeExtractor, Encodable {
+    typealias ID = ExtensibleIdentifier<String, Self>
     enum CodingKeys: String, CodingKey {
         case value = "type"
     }
     
     typealias ObjectType = Animal
-    let value: String
-    init(_ value: String) {
+    let value: ID
+    init(_ value: ID) {
         self.value = value
     }
 }
 
-extension AnimalType {
+extension AnimalType.ID {
     static var cat: Self { "cat" }
     static var dog: Self { "dog" }
 }
 
 struct Dog: Animal {
-    static var typeExtractor: AnimalType { .dog }
+    static var typeExtractor: AnimalType { .init(.dog) }
+    let type: AnimalType.ID
     let name: String
     let goodBoy: Bool
 }
 
 struct Cat: Animal {
-    static var typeExtractor: AnimalType { .cat }
+    static var typeExtractor: AnimalType { .init(.cat) }
+    let type: AnimalType.ID
     let name: String
     let breed: String
 }

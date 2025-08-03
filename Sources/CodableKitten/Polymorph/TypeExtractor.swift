@@ -77,7 +77,12 @@ public extension TypeExtractor {
     }
     func extract(from container: inout UnkeyedDecodingContainer, availableTypes: [any Polymorphic.Type]) throws -> ObjectType? {
         if let type = itemType(from: availableTypes) {
-            return try container.decode(type) as? ObjectType
+            do {
+                return try container.decode(type) as? ObjectType
+            } catch {
+                print("Error decoding \(type) from unkeyed container: \(error)")
+                throw error
+            }
         } else {
             return nil
         }
